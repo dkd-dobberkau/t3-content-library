@@ -6,8 +6,8 @@ Wraps the existing Python CLI and provides REST API + SSE for progress updates.
 import asyncio
 import json
 import os
+import random
 import sys
-import uuid
 import zipfile
 from datetime import datetime
 
@@ -28,6 +28,18 @@ app.add_middleware(
 
 # In-memory job store
 jobs: dict = {}
+
+# Alphacode alphabet: no O/0, I/1/L to avoid confusion
+ALPHACODE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
+
+
+def generate_alphacode() -> str:
+    """Generate a unique 5-character alphanumeric job code."""
+    for _ in range(100):
+        code = "".join(random.choices(ALPHACODE_CHARS, k=5))
+        if code not in jobs:
+            return code
+    raise RuntimeError("Failed to generate unique alphacode")
 
 # Path to the t3-content-library repo root (backend/ is inside the repo)
 T3_LIB_PATH = os.environ.get("T3_LIB_PATH", os.path.join(os.path.dirname(__file__), ".."))
@@ -61,7 +73,7 @@ class JobStatus(BaseModel):
 @app.post("/api/generate", response_model=JobStatus)
 async def start_generation(req: GenerateRequest):
     """Start a new content generation job."""
-    job_id = str(uuid.uuid4())[:8]
+    job_id = generate_alphacode()
     output_dir = os.path.join(OUTPUT_BASE, job_id)
     os.makedirs(output_dir, exist_ok=True)
 

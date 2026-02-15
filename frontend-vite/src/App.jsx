@@ -273,6 +273,7 @@ export default function App() {
               <IconCheck />
               Generierte Seiten
               <span className="results-count">{pages.length} Seiten</span>
+              {jobId && <span className="job-code">{jobId}</span>}
             </div>
             <a className="btn-download" href={`${API_BASE}/api/jobs/${jobId}/download`} download>
               <IconDownload />Als ZIP herunterladen
