@@ -403,6 +403,14 @@ export default function App() {
           </div>
         </section>
       )}
+
+      <footer className="footer">
+        <span>&copy; {new Date().getFullYear()} <a href="https://www.dkd.de" target="_blank" rel="noopener noreferrer">dkd Internet Service GmbH</a></span>
+        <span className="footer-sep" />
+        <a href="https://github.com/dkd-dobberkau/t3-content-library" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <span className="footer-sep" />
+        <span>MIT License</span>
+      </footer>
     </div>
   )
 }
