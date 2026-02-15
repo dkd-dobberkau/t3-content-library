@@ -58,6 +58,9 @@ const PAGE_SET_COUNTS = { small: 8, medium: 15, full: 20 }
 export default function App() {
   const [company, setCompany] = useState('')
   const [pageSet, setPageSet] = useState('full')
+  const [lookupCode, setLookupCode] = useState('')
+  const [lookupError, setLookupError] = useState(null)
+  const [lookupLoading, setLookupLoading] = useState(false)
   const [jobId, setJobId] = useState(null)
   const [status, setStatus] = useState(null)
   const [progress, setProgress] = useState(0)
@@ -186,15 +189,77 @@ export default function App() {
     }
   }, [])
 
+  const handleLookup = useCallback(async () => {
+    const code = lookupCode.trim().toUpperCase()
+    if (!code) return
+
+    setLookupError(null)
+    setLookupLoading(true)
+
+    try {
+      const res = await fetch(`${API_BASE}/api/jobs/${code}`)
+      if (!res.ok) {
+        setLookupError('Code nicht gefunden')
+        setLookupLoading(false)
+        return
+      }
+      const data = await res.json()
+      if (data.status !== 'completed') {
+        setLookupError(`Job Status: ${data.status}`)
+        setLookupLoading(false)
+        return
+      }
+
+      // Populate state from DB result
+      setJobId(data.job_id)
+      setStatus('completed')
+      setProgress(100)
+      setPagesDone(data.pages_done)
+      setTokens({
+        input: data.input_tokens || 0,
+        output: data.output_tokens || 0,
+        cost: data.cost_usd || 0,
+        duration: data.duration_sec || 0,
+      })
+      setError(null)
+      setCompletedPages([])
+      setCurrentPage('')
+
+      await loadPages(data.job_id)
+    } catch {
+      setLookupError('Verbindungsfehler')
+    } finally {
+      setLookupLoading(false)
+    }
+  }, [lookupCode, loadPages])
+
   const isRunning = status === 'pending' || status === 'running'
   const isCompleted = status === 'completed'
 
   return (
     <div className="app-container">
       <header className="header">
-        <div className="header-badge">
-          <span className="dot" />
-          TYPO3 Content Generator
+        <div className="header-top">
+          <div className="header-badge">
+            <span className="dot" />
+            TYPO3 Content Generator
+          </div>
+          <div className="lookup-group">
+            <input
+              className="lookup-input"
+              type="text"
+              placeholder="Code"
+              maxLength={5}
+              value={lookupCode}
+              onChange={e => setLookupCode(e.target.value.toUpperCase())}
+              onKeyDown={e => e.key === 'Enter' && handleLookup()}
+              disabled={lookupLoading}
+            />
+            <button className="lookup-btn" onClick={handleLookup} disabled={lookupLoading || !lookupCode.trim()}>
+              {lookupLoading ? <span className="spinner-sm" /> : 'Laden'}
+            </button>
+            {lookupError && <span className="lookup-error">{lookupError}</span>}
+          </div>
         </div>
         <h1>T3 Content <em>Library</em></h1>
         <p>Generiere realistische TYPO3-Seiten mit KI-generierten Inhalten auf Basis deiner Firmenbeschreibung.</p>

@@ -11,12 +11,23 @@ import sys
 import zipfile
 from datetime import datetime
 
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 
-app = FastAPI(title="T3 Content Library API", version="1.0.0")
+from backend.db import init_db, save_job, get_job, check_alphacode_exists
+
+
+@asynccontextmanager
+async def lifespan(app):
+    await init_db()
+    yield
+
+
+app = FastAPI(title="T3 Content Library API", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -33,11 +44,11 @@ jobs: dict = {}
 ALPHACODE_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
 
 
-def generate_alphacode() -> str:
+async def generate_alphacode() -> str:
     """Generate a unique 5-character alphanumeric job code."""
     for _ in range(100):
         code = "".join(random.choices(ALPHACODE_CHARS, k=5))
-        if code not in jobs:
+        if code not in jobs and not await check_alphacode_exists(code):
             return code
     raise RuntimeError("Failed to generate unique alphacode")
 
@@ -73,7 +84,7 @@ class JobStatus(BaseModel):
 @app.post("/api/generate", response_model=JobStatus)
 async def start_generation(req: GenerateRequest):
     """Start a new content generation job."""
-    job_id = generate_alphacode()
+    job_id = await generate_alphacode()
     output_dir = os.path.join(OUTPUT_BASE, job_id)
     os.makedirs(output_dir, exist_ok=True)
 
@@ -163,13 +174,36 @@ async def _run_generation(job_id: str, company: str, output_dir: str, page_set: 
         job_data["status"].status = "failed"
         job_data["status"].error = str(e)
 
+    # Persist final state to SQLite
+    await save_job(
+        job_id, job_data["company"], job_data["page_set"], job_data["status"]
+    )
+
 
 @app.get("/api/jobs/{job_id}", response_model=JobStatus)
 async def get_job_status(job_id: str):
-    """Get current job status."""
-    if job_id not in jobs:
+    """Get current job status. Falls back to DB if not in memory."""
+    if job_id in jobs:
+        return jobs[job_id]["status"]
+
+    row = await get_job(job_id)
+    if not row:
         raise HTTPException(status_code=404, detail="Job not found")
-    return jobs[job_id]["status"]
+
+    return JobStatus(
+        job_id=row["job_id"],
+        status=row["status"],
+        progress=row["progress"],
+        pages_done=row["pages_done"],
+        pages_total=row["pages_total"],
+        output_dir=row["output_dir"],
+        error=row["error"],
+        created_at=row["created_at"],
+        input_tokens=row["input_tokens"],
+        output_tokens=row["output_tokens"],
+        cost_usd=row["cost_usd"],
+        duration_sec=row["duration_sec"],
+    )
 
 
 @app.get("/api/jobs/{job_id}/events")
@@ -213,10 +247,14 @@ async def stream_events(job_id: str):
 @app.get("/api/jobs/{job_id}/pages")
 async def list_pages(job_id: str):
     """List all generated pages for a job."""
-    if job_id not in jobs:
-        raise HTTPException(status_code=404, detail="Job not found")
-
-    output_dir = jobs[job_id]["status"].output_dir
+    output_dir = None
+    if job_id in jobs:
+        output_dir = jobs[job_id]["status"].output_dir
+    else:
+        row = await get_job(job_id)
+        if not row:
+            raise HTTPException(status_code=404, detail="Job not found")
+        output_dir = row["output_dir"]
     if not output_dir or not os.path.exists(output_dir):
         return {"pages": []}
 
@@ -259,14 +297,20 @@ async def list_pages(job_id: str):
 @app.get("/api/jobs/{job_id}/download")
 async def download_zip(job_id: str):
     """Download all generated files as ZIP."""
-    if job_id not in jobs:
-        raise HTTPException(status_code=404, detail="Job not found")
+    output_dir = None
+    company = None
+    if job_id in jobs:
+        output_dir = jobs[job_id]["status"].output_dir
+        company = jobs[job_id]["company"]
+    else:
+        row = await get_job(job_id)
+        if not row:
+            raise HTTPException(status_code=404, detail="Job not found")
+        output_dir = row["output_dir"]
+        company = row["company"]
 
-    output_dir = jobs[job_id]["status"].output_dir
     if not output_dir or not os.path.exists(output_dir):
         raise HTTPException(status_code=404, detail="No output files found")
-
-    company = jobs[job_id]["company"]
     safe_name = "".join(c if c.isalnum() or c in "-_ " else "" for c in company).strip().replace(" ", "-")
 
     zip_path = f"/tmp/t3-{safe_name}-{job_id}.zip"

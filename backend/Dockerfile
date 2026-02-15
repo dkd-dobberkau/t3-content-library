@@ -21,7 +21,7 @@ COPY --chown=appuser:appuser t3_content_library/ ./t3_content_library/
 COPY --chown=appuser:appuser config/ ./config/
 COPY --chown=appuser:appuser templates/ ./templates/
 COPY --chown=appuser:appuser generate.py ./
-COPY --chown=appuser:appuser backend/app.py ./backend/
+COPY --chown=appuser:appuser backend/*.py ./backend/
 
 RUN mkdir -p /app/output && chown appuser:appuser /app/output
 
