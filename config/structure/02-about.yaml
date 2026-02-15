@@ -1,0 +1,17 @@
+page:
+  title: "Über uns"
+  slug: "ueber-uns"
+  parent: "/"
+  nav_position: 2
+content_elements:
+  - type: header
+    prompt: "Erstelle eine einladende Überschrift für die Über-uns-Seite von {company}"
+  - type: textmedia
+    prompt: "Schreibe über die Geschichte von {company}. 3-4 Sätze, authentisch."
+    image: "placeholder://team.jpg"
+    image_position: right
+  - type: text
+    subtype: bullets
+    prompt: "Nenne 3 Kernwerte von {company} mit je einer kurzen Erklärung"
+  - type: quote
+    prompt: "Erstelle ein realistisches Kundenzitat über {company}"
