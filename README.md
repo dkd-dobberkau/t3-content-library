@@ -39,6 +39,7 @@ The project includes a React frontend with real-time progress tracking, token us
 - Python 3.11+
 - Node.js 18+ (for Web UI)
 - [Anthropic API key](https://console.anthropic.com/)
+- Docker & Docker Compose (for production deployment)
 
 ## Installation
 
@@ -51,7 +52,7 @@ uv venv .venv && source .venv/bin/activate
 uv pip install -r requirements.txt
 ```
 
-### Web UI
+### Web UI (Development)
 
 ```bash
 # Backend
@@ -62,6 +63,25 @@ uv pip install -r requirements.txt -r ../requirements.txt
 # Frontend
 cd ../frontend-vite
 npm install
+```
+
+### Docker (Production)
+
+```bash
+cp .env.example .env
+# Add your Anthropic API key to .env
+
+docker compose up -d
+```
+
+This builds and starts two containers:
+- **nginx** — serves the Vite production build and proxies `/api/*` to the backend
+- **backend** — FastAPI + the Python content generator
+
+The app is available at http://localhost (port 80). If port 80 is already in use:
+
+```bash
+NGINX_PORT=8080 docker compose up -d
 ```
 
 ## Configuration
@@ -93,7 +113,7 @@ Options:
 - `--parallel N` — Number of concurrent page generations (default: 5)
 - `--jsonl` — Machine-readable JSONL output (used by backend)
 
-### Web UI
+### Web UI (Development)
 
 Start both services:
 
@@ -106,6 +126,21 @@ cd frontend-vite && npm run dev
 ```
 
 Open http://localhost:3000 in your browser.
+
+### Docker (Production)
+
+```bash
+docker compose up -d
+```
+
+Useful commands:
+
+```bash
+docker compose logs -f          # Follow logs
+docker compose ps               # Check container status
+docker compose down             # Stop and remove containers
+docker compose build --no-cache # Rebuild images from scratch
+```
 
 ## Project Structure
 
@@ -120,12 +155,15 @@ t3-content-library/
 ├── backend/
 │   └── app.py              # FastAPI REST API + SSE progress streaming
 ├── frontend-vite/          # React + Vite frontend
+│   ├── Dockerfile          # Multi-stage: Node build → Nginx
+│   ├── nginx.conf          # Reverse proxy + static file config
 │   └── src/
 │       ├── App.jsx         # Main application component
 │       └── styles.css      # Dark theme styling
 ├── templates/
 │   └── page.md.j2          # Markdown output template
 ├── tests/                  # Unit and integration tests
+├── docker-compose.yml      # Production: backend + nginx
 ├── generate.py             # Entry point
 └── requirements.txt
 ```
