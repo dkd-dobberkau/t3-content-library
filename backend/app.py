@@ -330,7 +330,8 @@ async def download_zip(job_id: str):
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok", "t3_lib_path": T3_LIB_PATH}
+    model = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-5-20250929")
+    return {"status": "ok", "t3_lib_path": T3_LIB_PATH, "model": model}
 
 
 if __name__ == "__main__":

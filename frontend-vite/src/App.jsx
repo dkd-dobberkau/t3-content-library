@@ -72,6 +72,7 @@ export default function App() {
   const [error, setError] = useState(null)
   const [tokens, setTokens] = useState({ input: 0, output: 0, cost: 0, duration: 0 })
   const [elapsed, setElapsed] = useState(0)
+  const [model, setModel] = useState(null)
   const startTimeRef = useRef(null)
   const timerRef = useRef(null)
   const eventSourceRef = useRef(null)
@@ -183,6 +184,10 @@ export default function App() {
   }, [company, pageSet, loadPages, pollStatus])
 
   useEffect(() => {
+    fetch(`${API_BASE}/api/health`)
+      .then(r => r.json())
+      .then(d => { if (d.model) setModel(d.model) })
+      .catch(() => {})
     return () => {
       if (eventSourceRef.current) eventSourceRef.current.close()
       if (timerRef.current) clearInterval(timerRef.current)
@@ -243,6 +248,7 @@ export default function App() {
           <div className="header-badge">
             <span className="dot" />
             TYPO3 Content Generator
+            {model && <span className="model-tag">{model}</span>}
           </div>
           <div className="lookup-group">
             <input
