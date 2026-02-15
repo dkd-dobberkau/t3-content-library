@@ -17,8 +17,9 @@ def test_load_all_structures():
     base = os.path.join(os.path.dirname(__file__), "..", "config", "structure")
     pages = load_all_structures(base)
 
-    assert len(pages) >= 1
-    assert pages[0]["page"]["title"] == "Über uns"
+    assert len(pages) == 20
+    assert pages[0]["page"]["title"] == "Startseite"
+    assert pages[1]["page"]["title"] == "Über uns"
 
 
 def test_structures_sorted_by_filename():
