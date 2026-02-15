@@ -96,8 +96,8 @@ def main(company: str, output_dir: str, parallel: int, page_set: str, jsonl: boo
 
     def process_page(structure):
         page = structure["page"]
-        content_elements, usage = generate_content_for_page(structure, company, client=client)
-        markdown = render_page(page, content_elements, company)
+        content_elements, usage, image_keywords = generate_content_for_page(structure, company, client=client)
+        markdown = render_page(page, content_elements, company, image_keywords=image_keywords)
 
         filename = f"{page['slug'].strip('/').replace('/', '-') or 'index'}.md"
         filepath = os.path.join(dest, filename)

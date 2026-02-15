@@ -51,3 +51,26 @@ def test_render_page_seo_fields():
 
     assert "seo:" in result
     assert "Kontakt - TestFirma" in result
+
+
+def test_render_page_with_image_keywords():
+    page_meta = {"title": "Über uns", "slug": "ueber-uns", "parent": "/", "nav_position": 2}
+    content_elements = [{"type": "header", "content": "# Über uns"}]
+    keywords = ["business team professional", "modern office interior"]
+
+    result = render_page(page_meta, content_elements, "TestFirma", image_keywords=keywords)
+
+    assert "images:" in result
+    assert "search_keywords:" in result
+    assert "business team professional" in result
+    assert "modern office interior" in result
+
+
+def test_render_page_without_image_keywords():
+    page_meta = {"title": "Test", "slug": "test", "parent": "/", "nav_position": 1}
+    content_elements = [{"type": "header", "content": "# Test"}]
+
+    result = render_page(page_meta, content_elements, "TestFirma")
+
+    assert "images:" not in result
+    assert "search_keywords:" not in result

@@ -4,6 +4,7 @@ from click.testing import CliRunner
 from t3_content_library.cli import main
 
 MOCK_USAGE = {"input_tokens": 100, "output_tokens": 200}
+MOCK_IMAGE_KEYWORDS = ["business office modern", "team meeting professional"]
 
 
 def test_cli_generates_output_files(tmp_path):
@@ -17,6 +18,7 @@ def test_cli_generates_output_files(tmp_path):
                 {"type": "text", "content": "Beispieltext."},
             ],
             MOCK_USAGE,
+            MOCK_IMAGE_KEYWORDS,
         )
 
         runner = CliRunner()
@@ -39,6 +41,7 @@ def test_cli_shows_progress():
         mock_gen.return_value = (
             [{"type": "header", "content": "# Test"}],
             MOCK_USAGE,
+            MOCK_IMAGE_KEYWORDS,
         )
 
         runner = CliRunner()

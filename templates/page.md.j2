@@ -5,6 +5,13 @@ parent: "{{ page.parent }}"
 nav_position: {{ page.nav_position }}
 seo:
   title: "{{ page.title }} - {{ company_name }}"
+{% if image_keywords %}
+images:
+  search_keywords:
+  {% for keyword in image_keywords %}
+    - "{{ keyword }}"
+  {% endfor %}
+{% endif %}
 ---
 
 {% for ce in content_elements %}

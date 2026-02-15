@@ -7,6 +7,7 @@ def render_page(
     page_meta: dict,
     content_elements: list[dict],
     company_name: str,
+    image_keywords: list[str] | None = None,
 ) -> str:
     """Render a page to Markdown with YAML frontmatter."""
     templates_dir = os.path.join(os.path.dirname(__file__), "..", "templates")
@@ -22,4 +23,5 @@ def render_page(
         page=page_meta,
         content_elements=content_elements,
         company_name=company_name,
+        image_keywords=image_keywords or [],
     )

@@ -9,7 +9,8 @@ DEFAULT_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-5-20250929")
 SYSTEM_PROMPT = """Du bist ein Content-Autor für eine Unternehmenswebsite.
 Schreibe natürlichen, professionellen deutschen Content.
 Antworte NUR mit dem angeforderten Content, ohne Erklärungen oder Kommentare.
-Verwende Markdown-Formatierung wo passend."""
+Verwende Markdown-Formatierung wo passend.
+Wenn nach Bild-Suchbegriffen gefragt, liefere passende englische Suchbegriffe für Stockfoto-Plattformen wie Unsplash."""
 
 # Pricing per million tokens (Claude Sonnet 4.5)
 PRICING = {
@@ -23,10 +24,12 @@ def generate_content_for_page(
     company_description: str,
     model: str = DEFAULT_MODEL,
     client: anthropic.Anthropic | None = None,
-) -> tuple[list[dict], dict]:
+) -> tuple[list[dict], dict, list[str]]:
     """Generate content for all content elements of a page in a single API call.
 
-    Returns (content_elements, usage) where usage contains token counts.
+    Returns (content_elements, usage, image_keywords) where usage contains
+    token counts and image_keywords is a list of English search terms for
+    stock photo platforms.
     """
     if client is None:
         client = anthropic.Anthropic()
@@ -46,6 +49,12 @@ def generate_content_for_page(
         f"Trenne jedes Element mit einer eigenen Zeile die NUR ===CE:N=== enthält "
         f"(N = Nummer des Elements). Beginne mit ===CE:1===\n\n"
         + "\n".join(parts)
+        + "\n\nGanz am Ende, nach allen Content-Elementen, füge eine Zeile ===IMAGES=== ein. "
+        "Darunter liste 1-3 englische Suchbegriffe für Stockfoto-Plattformen (z.B. Unsplash), "
+        "die zum Thema und Inhalt dieser Seite passen. "
+        "Ein Suchbegriff pro Zeile, ohne Nummerierung oder Aufzählungszeichen. "
+        "Die Begriffe sollen spezifisch und beschreibend sein (z.B. 'italian restaurant interior warm lighting' "
+        "statt nur 'restaurant')."
     )
 
     response = client.messages.create(
@@ -62,6 +71,17 @@ def generate_content_for_page(
         "output_tokens": response.usage.output_tokens,
     }
 
+    # Split off ===IMAGES=== section
+    image_keywords = []
+    if "===IMAGES===" in raw:
+        raw, images_section = raw.split("===IMAGES===", 1)
+        raw = raw.strip()
+        image_keywords = [
+            line.strip()
+            for line in images_section.strip().splitlines()
+            if line.strip()
+        ]
+
     # Parse response by ===CE:N=== markers
     sections = re.split(r"===CE:\d+===\s*", raw)
     sections = [s.strip() for s in sections if s.strip()]
@@ -75,4 +95,4 @@ def generate_content_for_page(
                 result[key] = ce[key]
         results.append(result)
 
-    return results, usage
+    return results, usage, image_keywords

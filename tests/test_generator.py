@@ -24,7 +24,11 @@ def test_generate_content_for_page():
         "===CE:1===\n"
         "# Willkommen bei La Bella Vista\n"
         "===CE:2===\n"
-        "Seit 2005 servieren wir authentische Küche."
+        "Seit 2005 servieren wir authentische Küche.\n"
+        "===IMAGES===\n"
+        "italian restaurant interior warm lighting\n"
+        "mediterranean cuisine fresh pasta\n"
+        "cozy dining room candles"
     )
 
     with patch("t3_content_library.generator.anthropic") as mock_anthropic:
@@ -32,7 +36,7 @@ def test_generate_content_for_page():
         mock_anthropic.Anthropic.return_value = mock_client
         mock_client.messages.create.return_value = _make_mock_response(batched_response, 150, 320)
 
-        result, usage = generate_content_for_page(structure, "La Bella Vista, München")
+        result, usage, image_keywords = generate_content_for_page(structure, "La Bella Vista, München")
 
         assert len(result) == 2
         assert result[0]["type"] == "header"
@@ -42,6 +46,8 @@ def test_generate_content_for_page():
         assert mock_client.messages.create.call_count == 1
         assert usage["input_tokens"] == 150
         assert usage["output_tokens"] == 320
+        assert len(image_keywords) == 3
+        assert "italian restaurant interior warm lighting" in image_keywords
 
 
 def test_content_element_preserves_metadata():
@@ -65,7 +71,7 @@ def test_content_element_preserves_metadata():
         mock_anthropic.Anthropic.return_value = mock_client
         mock_client.messages.create.return_value = _make_mock_response(batched_response)
 
-        result, usage = generate_content_for_page(structure, "TestFirma")
+        result, usage, image_keywords = generate_content_for_page(structure, "TestFirma")
 
         assert result[0]["image"] == "placeholder://hero.jpg"
         assert result[0]["image_position"] == "right"
