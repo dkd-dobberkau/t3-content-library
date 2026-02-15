@@ -1,0 +1,17 @@
+.git/
+.venv/
+__pycache__/
+*.pyc
+output/
+.env
+.pytest_cache/
+.DS_Store
+node_modules/
+frontend-vite/node_modules/
+frontend/
+docs/
+tests/
+*.png
+.claude/
+.playwright-mcp/
+.codegraph/
