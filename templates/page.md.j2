@@ -1,0 +1,20 @@
+---
+title: "{{ page.title }}"
+slug: "{{ page.slug }}"
+parent: "{{ page.parent }}"
+nav_position: {{ page.nav_position }}
+seo:
+  title: "{{ page.title }} - {{ company_name }}"
+---
+
+{% for ce in content_elements %}
+{% if ce.type == "textmedia" and ce.image is defined %}
+<!-- CE: {{ ce.type }}, image: {{ ce.image }}, position: {{ ce.image_position }} -->
+{% elif ce.subtype is defined %}
+<!-- CE: {{ ce.type }}, subtype: {{ ce.subtype }} -->
+{% else %}
+<!-- CE: {{ ce.type }} -->
+{% endif %}
+{{ ce.content }}
+
+{% endfor %}
