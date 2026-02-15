@@ -1,7 +1,10 @@
+import os
 import re
 
 import anthropic
 
+
+DEFAULT_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-5-20250929")
 
 SYSTEM_PROMPT = """Du bist ein Content-Autor für eine Unternehmenswebsite.
 Schreibe natürlichen, professionellen deutschen Content.
@@ -18,7 +21,7 @@ PRICING = {
 def generate_content_for_page(
     structure: dict,
     company_description: str,
-    model: str = "claude-sonnet-4-5-20250929",
+    model: str = DEFAULT_MODEL,
     client: anthropic.Anthropic | None = None,
 ) -> tuple[list[dict], dict]:
     """Generate content for all content elements of a page in a single API call.
