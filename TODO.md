@@ -22,3 +22,38 @@ Verschiedene Schreibstile als Auswahl im Frontend anbieten, die den System-Promp
 - [ ] Style-Auswahl als Dropdown im Frontend neben Page-Set
 - [ ] Backend: Style-Parameter an Generator durchreichen
 - [ ] Generator: System-Prompt dynamisch anpassen basierend auf Style
+
+## Firmen-Research vor Generierung
+
+Vor der Content-Generierung einen Research-Schritt einbauen, der Details zum Unternehmen recherchiert und als Report zur Bestätigung vorlegt.
+
+### Ablauf
+
+1. User gibt Firmenbeschreibung ein
+2. Claude recherchiert/generiert einen **Company Report** mit plausiblen Details:
+   - Firmenname, Gründungsjahr, Standort(e)
+   - Geschäftsführung / Ansprechpartner (fiktive Namen)
+   - Kernleistungen / Produkte
+   - Zielgruppe und Positionierung
+   - USPs / Alleinstellungsmerkmale
+   - Kontaktdaten (Adresse, Telefon, E-Mail)
+   - Öffnungszeiten (falls relevant)
+   - Teamgröße, Anzahl Mitarbeiter
+3. Report wird im Frontend als **editierbares Formular/Preview** angezeigt
+4. User kann Details anpassen, korrigieren, ergänzen
+5. Nach Bestätigung fließen die Details als Kontext in die Content-Generierung ein
+
+### Vorteile
+
+- Konsistente Daten über alle Seiten (gleiche Namen, Adressen, Fakten)
+- Realistischere Inhalte statt generischer Platzhalter
+- User hat Kontrolle über die verwendeten Details
+- Einmalige Research-Kosten statt Wiederholung in jedem Page-Prompt
+
+### Umsetzung
+
+- [ ] Neuer API-Endpoint `POST /api/research` — generiert Company Report
+- [ ] Research-Prompt als Template in `config/`
+- [ ] Frontend: Zwischenschritt mit editierbarem Report vor "Generieren"
+- [ ] Company Report als JSON im Job speichern (DB + Datei)
+- [ ] Generator: Report-Daten als zusätzlichen Kontext in System-Prompt injizieren
