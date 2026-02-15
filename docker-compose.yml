@@ -1,0 +1,47 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: t3-backend
+    env_file:
+      - .env
+    environment:
+      - T3_LIB_PATH=/app
+      - OUTPUT_BASE=/app/output
+    volumes:
+      - t3-output:/app/output
+    networks:
+      - t3-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nginx:
+    build:
+      context: ./frontend-vite
+      dockerfile: Dockerfile
+    container_name: t3-nginx
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - t3-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  t3-output:
+
+networks:
+  t3-network:
+    driver: bridge
