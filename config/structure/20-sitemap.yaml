@@ -1,0 +1,12 @@
+page:
+  title: "Sitemap"
+  slug: "sitemap"
+  parent: "/"
+  nav_position: 20
+content_elements:
+  - type: header
+    prompt: "Erstelle eine Überschrift für die Sitemap-Seite von {company}."
+  - type: menu
+    prompt: "Erstelle einen kurzen Einleitungstext für die Sitemap von {company}. 1-2 Sätze, die erklären, dass diese Seite eine Übersicht aller Inhalte der Website bietet."
+  - type: text
+    prompt: "Schreibe einen zusätzlichen SEO-relevanten Text über die Website von {company}. 2-3 Sätze, die das Leistungsspektrum und die wichtigsten Themenbereiche der Website zusammenfassen."

@@ -1,0 +1,14 @@
+page:
+  title: "Kontakt"
+  slug: "kontakt"
+  parent: "/"
+  nav_position: 15
+content_elements:
+  - type: header
+    prompt: "Erstelle eine einladende Überschrift für die Kontaktseite von {company}."
+  - type: text
+    prompt: "Erstelle die Kontaktdaten für {company} mit fiktiver Adresse, Telefonnummer und E-Mail-Adresse. Formatiere übersichtlich mit Zeilenumbrüchen. Verwende Platzhalter-Daten."
+  - type: text
+    prompt: "Schreibe eine Anfahrtsbeschreibung für {company}. 2-3 Sätze mit Hinweisen zu Erreichbarkeit per Auto, ÖPNV und Parkmöglichkeiten. Verwende Platzhalter-Daten."
+  - type: text
+    prompt: "Erstelle einen kurzen Einleitungstext für das Kontaktformular von {company}. 2-3 Sätze wie 'Nutzen Sie unser Kontaktformular, um uns Ihre Anfrage zu senden. Wir melden uns schnellstmöglich bei Ihnen zurück.'"

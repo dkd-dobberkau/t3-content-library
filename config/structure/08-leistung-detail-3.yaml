@@ -1,0 +1,14 @@
+page:
+  title: "Leistung 3"
+  slug: "leistungen/detail-3"
+  parent: "/leistungen"
+  nav_position: 8
+content_elements:
+  - type: header
+    prompt: "Erstelle eine überzeugende Überschrift für die dritte Detailleistung von {company}."
+  - type: textmedia
+    prompt: "Beschreibe die dritte Leistung von {company} ausführlich. 4-5 Sätze über den Ablauf, die Besonderheiten und warum Kunden davon profitieren."
+    image: "placeholder://leistung-detail-3.jpg"
+    image_position: right
+  - type: accordion
+    prompt: "Erstelle 4-5 aufklappbare Abschnitte zur dritten Leistung von {company}. Jeder Abschnitt mit einer prägnanten Frage als Titel und einer Antwort von 2-3 Sätzen. Themen: Ablauf, Voraussetzungen, Dauer, Kosten, Ergebnis."

@@ -1,0 +1,17 @@
+page:
+  title: "Referenzen"
+  slug: "referenzen"
+  parent: "/"
+  nav_position: 9
+content_elements:
+  - type: header
+    prompt: "Erstelle eine einprägsame Überschrift für die Referenzen-Seite von {company}."
+  - type: text
+    prompt: "Schreibe eine Einleitung für die Referenzen-Seite von {company}. 3-4 Sätze, die die Projekterfahrung und Kundenzufriedenheit unterstreichen."
+  - type: image
+    prompt: "Beschreibe 3 fiktive Projektbilder für die Referenzen-Galerie von {company}. Jedes Bild mit kurzem Projektnamen und 1 Satz Beschreibung."
+    image: "placeholder://referenzen-gallery.jpg"
+  - type: textmedia
+    prompt: "Stelle ein herausragendes Referenzprojekt von {company} vor. 3-4 Sätze über Aufgabenstellung, Lösung und Ergebnis."
+    image: "placeholder://referenz-highlight.jpg"
+    image_position: left

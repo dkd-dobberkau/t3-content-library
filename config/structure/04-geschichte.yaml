@@ -1,0 +1,16 @@
+page:
+  title: "Geschichte"
+  slug: "ueber-uns/geschichte"
+  parent: "/ueber-uns"
+  nav_position: 4
+content_elements:
+  - type: header
+    prompt: "Erstelle eine passende Überschrift für die Unternehmensgeschichte von {company}."
+  - type: textmedia
+    prompt: "Erzähle die Gründungsgeschichte von {company}. 4-5 Sätze über die Anfänge, die Motivation der Gründer und die ersten Schritte."
+    image: "placeholder://gruendung.jpg"
+    image_position: left
+  - type: text
+    prompt: "Erstelle 3-4 Meilensteine in der Geschichte von {company} als Timeline. Jeder Meilenstein mit fiktivem Jahr und 1-2 Sätzen Beschreibung. Formatiere als Markdown-Liste mit Jahreszahl als Fettdruck."
+  - type: text
+    prompt: "Schreibe einen Ausblick auf die Zukunft von {company}. 2-3 Sätze über Vision, geplante Entwicklungen und langfristige Ziele."

@@ -1,0 +1,13 @@
+page:
+  title: "Team"
+  slug: "ueber-uns/team"
+  parent: "/ueber-uns"
+  nav_position: 3
+content_elements:
+  - type: header
+    prompt: "Erstelle eine sympathische Überschrift für die Team-Seite von {company}."
+  - type: text
+    prompt: "Schreibe einen einleitenden Absatz für die Team-Seite von {company}. 3-4 Sätze über Teamkultur, Zusammenarbeit und gemeinsame Werte."
+  - type: image
+    prompt: "Beschreibe 4 fiktive Teammitglieder von {company} mit vollständigem Namen, Rolle/Position und je 1-2 Sätzen zur Person. Formatiere als Markdown-Liste."
+    image: "placeholder://team-gallery.jpg"

@@ -1,0 +1,16 @@
+page:
+  title: "Startseite"
+  slug: "/"
+  parent: ""
+  nav_position: 1
+content_elements:
+  - type: header
+    prompt: "Erstelle eine kraftvolle Hero-Überschrift für die Startseite von {company}. Kurz, einprägsam, maximal 8 Wörter."
+  - type: textmedia
+    prompt: "Schreibe einen einladenden Introtext für die Startseite von {company}. 3-4 Sätze, die das Unternehmen vorstellen und Vertrauen schaffen."
+    image: "placeholder://hero.jpg"
+    image_position: right
+  - type: text
+    prompt: "Verfasse eine kompakte Unternehmensbeschreibung für {company}. 2-3 Sätze, die den Kernbereich und die Zielgruppe klar benennen."
+  - type: shortcut
+    prompt: "Erstelle drei kurze Teaser-Texte für die Unterseiten Leistungen, Über uns und Referenzen von {company}. Jeder Teaser soll 1-2 Sätze lang sein und neugierig auf die jeweilige Seite machen."

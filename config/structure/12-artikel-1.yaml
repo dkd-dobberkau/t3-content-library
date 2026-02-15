@@ -1,0 +1,14 @@
+page:
+  title: "Branchentrends"
+  slug: "aktuelles/artikel-1"
+  parent: "/aktuelles"
+  nav_position: 12
+content_elements:
+  - type: header
+    prompt: "Erstelle eine aussagekräftige Überschrift für einen Fachartikel über aktuelle Branchentrends im Bereich von {company}."
+  - type: textmedia
+    prompt: "Schreibe einen branchenrelevanten Fachartikel für {company}. 3-4 Absätze über aktuelle Trends, Entwicklungen und deren Bedeutung für die Branche. Sachlich-informativ mit konkreten Beispielen."
+    image: "placeholder://branchentrends.jpg"
+    image_position: right
+  - type: text
+    prompt: "Verfasse ein Fazit für den Branchentrends-Artikel von {company}. 2-3 Sätze, die die wichtigsten Erkenntnisse zusammenfassen und einen Ausblick geben."

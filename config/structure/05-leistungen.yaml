@@ -1,0 +1,22 @@
+page:
+  title: "Leistungen"
+  slug: "leistungen"
+  parent: "/"
+  nav_position: 5
+content_elements:
+  - type: header
+    prompt: "Erstelle eine überzeugende Überschrift für die Leistungsübersicht von {company}."
+  - type: text
+    prompt: "Schreibe einen einleitenden Überblick über das Leistungsangebot von {company}. 3-4 Sätze, die das Gesamtportfolio zusammenfassen und den Mehrwert für Kunden betonen."
+  - type: textmedia
+    prompt: "Beschreibe die erste Kernleistung von {company} als Teaser. 2-3 Sätze, die neugierig machen und den konkreten Nutzen hervorheben."
+    image: "placeholder://leistung-1.jpg"
+    image_position: right
+  - type: textmedia
+    prompt: "Beschreibe die zweite Kernleistung von {company} als Teaser. 2-3 Sätze, die den Kundennutzen und die Besonderheit dieser Leistung betonen."
+    image: "placeholder://leistung-2.jpg"
+    image_position: left
+  - type: textmedia
+    prompt: "Beschreibe die dritte Kernleistung von {company} als Teaser. 2-3 Sätze, die zeigen, warum Kunden sich für {company} entscheiden."
+    image: "placeholder://leistung-3.jpg"
+    image_position: right

@@ -1,0 +1,16 @@
+page:
+  title: "Projekt Beispiel"
+  slug: "referenzen/projekt-1"
+  parent: "/referenzen"
+  nav_position: 10
+content_elements:
+  - type: header
+    prompt: "Erstelle eine Überschrift für eine Projekt-Fallstudie von {company}."
+  - type: textmedia
+    prompt: "Schreibe eine ausführliche Fallstudie zu einem fiktiven Kundenprojekt von {company}. 5-6 Sätze über Ausgangslage, Herausforderung, gewählte Lösung und Umsetzung."
+    image: "placeholder://projekt-1.jpg"
+    image_position: right
+  - type: quote
+    prompt: "Erstelle ein realistisches Kundenzitat eines fiktiven Ansprechpartners zum Projekt mit {company}. Vollständiger Name und Position angeben. 2-3 Sätze."
+  - type: text
+    prompt: "Beschreibe die Ergebnisse und den messbaren Erfolg des Projekts von {company}. 3-4 Sätze mit konkreten (fiktiven) Zahlen und Verbesserungen."

@@ -1,0 +1,10 @@
+page:
+  title: "Aktuelles"
+  slug: "aktuelles"
+  parent: "/"
+  nav_position: 11
+content_elements:
+  - type: header
+    prompt: "Erstelle eine ansprechende Überschrift für die Aktuelles-/News-Seite von {company}."
+  - type: text
+    prompt: "Schreibe einen einleitenden Text für den Blog-/News-Bereich von {company}. 2-3 Sätze, die erklären, dass hier aktuelle Neuigkeiten, Branchentrends und Einblicke geteilt werden."

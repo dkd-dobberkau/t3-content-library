@@ -1,0 +1,17 @@
+page:
+  title: "Leistung 2"
+  slug: "leistungen/detail-2"
+  parent: "/leistungen"
+  nav_position: 7
+content_elements:
+  - type: header
+    prompt: "Erstelle eine ansprechende Überschrift für die zweite Detailleistung von {company}."
+  - type: textmedia
+    prompt: "Beschreibe die zweite Leistung von {company} ausführlich. 4-5 Sätze über Methodik, Einsatzgebiete und den Nutzen für Kunden."
+    image: "placeholder://leistung-detail-2.jpg"
+    image_position: left
+  - type: text
+    subtype: table
+    prompt: "Erstelle eine Vergleichs- oder Preistabelle für die zweite Leistung von {company}. 3 Pakete oder Varianten mit je 4-5 Merkmalen. Formatiere als Markdown-Tabelle."
+  - type: text
+    prompt: "Verfasse einen abschliessenden Absatz für die zweite Leistung von {company}. 2-3 Sätze, die zur nächsten Handlung auffordern und Vertrauen schaffen."

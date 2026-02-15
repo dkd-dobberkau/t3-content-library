@@ -1,0 +1,12 @@
+page:
+  title: "Downloads"
+  slug: "downloads"
+  parent: "/"
+  nav_position: 19
+content_elements:
+  - type: header
+    prompt: "Erstelle eine passende Überschrift für die Download-Seite von {company}."
+  - type: text
+    prompt: "Schreibe einen einleitenden Text für die Download-Seite von {company}. 2-3 Sätze, die erklären, welche Materialien und Dokumente zum Herunterladen bereitstehen."
+  - type: uploads
+    prompt: "Erstelle eine Liste von 4-6 fiktiven Download-Ressourcen für {company}. Zum Beispiel: Unternehmensbroschüre, Preisliste, Produktkatalog, Zertifikate, Technische Datenblätter. Formatiere als Markdown-Liste mit Dateiname, Beschreibung und Dateigröße."

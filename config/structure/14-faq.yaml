@@ -1,0 +1,10 @@
+page:
+  title: "FAQ"
+  slug: "faq"
+  parent: "/"
+  nav_position: 14
+content_elements:
+  - type: header
+    prompt: "Erstelle eine klare Überschrift für die FAQ-Seite von {company}."
+  - type: accordion
+    prompt: "Erstelle 6-8 häufig gestellte Fragen und Antworten für {company}. Formatiere als Markdown mit ## für Fragen und Fließtext für Antworten. Die Fragen sollen typische Kundenanliegen abdecken: Leistungsumfang, Preise, Ablauf der Zusammenarbeit, Kontaktmöglichkeiten, Lieferzeiten und Garantien."

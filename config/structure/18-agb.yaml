@@ -1,0 +1,10 @@
+page:
+  title: "AGB"
+  slug: "agb"
+  parent: "/"
+  nav_position: 18
+content_elements:
+  - type: header
+    prompt: "Erstelle eine Überschrift für die AGB-Seite von {company}."
+  - type: text
+    prompt: "Erstelle Allgemeine Geschäftsbedingungen (AGB) für {company}. Verwende Platzhalter-Daten. Decke ab: Geltungsbereich, Vertragsschluss, Preise, Zahlung, Lieferung, Widerruf, Haftung, Schlussbestimmungen. Formatiere mit Markdown-Überschriften."

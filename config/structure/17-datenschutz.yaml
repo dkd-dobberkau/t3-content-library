@@ -1,0 +1,10 @@
+page:
+  title: "Datenschutz"
+  slug: "datenschutz"
+  parent: "/"
+  nav_position: 17
+content_elements:
+  - type: header
+    prompt: "Erstelle eine Überschrift für die Datenschutzerklärung von {company}."
+  - type: text
+    prompt: "Erstelle eine deutsche Datenschutzerklärung für die Website von {company}. Verwende Platzhalter-Daten. Decke die wichtigsten DSGVO-Abschnitte ab: Verantwortlicher, Datenerhebung, Cookies, Rechte der Betroffenen, Kontakt. Formatiere mit Markdown-Überschriften und Abschnitten."

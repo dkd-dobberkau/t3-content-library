@@ -1,0 +1,15 @@
+page:
+  title: "Kundenerfolg"
+  slug: "aktuelles/artikel-2"
+  parent: "/aktuelles"
+  nav_position: 13
+content_elements:
+  - type: header
+    prompt: "Erstelle eine überzeugende Überschrift für eine Kundenerfolgsgeschichte von {company}."
+  - type: text
+    prompt: "Schreibe eine Kundenerfolgsgeschichte für {company}. 2-3 Absätze über einen fiktiven Kunden, dessen Herausforderung und wie {company} zur Lösung beigetragen hat. Konkret und glaubwürdig."
+  - type: image
+    prompt: "Beschreibe ein passendes Bild, das die erfolgreiche Zusammenarbeit zwischen {company} und dem Kunden illustriert. 1-2 Sätze Bildbeschreibung."
+    image: "placeholder://kundenerfolg.jpg"
+  - type: quote
+    prompt: "Erstelle ein realistisches Expertenzitat zum Thema Kundenerfolg bei {company}. Das Zitat soll von einem fiktiven Branchenexperten oder zufriedenen Kunden stammen und die Kompetenz von {company} unterstreichen."
