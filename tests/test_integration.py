@@ -9,14 +9,17 @@ def _make_mock_response(text: str):
     mock_block = MagicMock()
     mock_block.text = text
     mock_response.content = [mock_block]
+    mock_response.usage = MagicMock(input_tokens=100, output_tokens=200)
     return mock_response
 
 
 def test_full_generation_with_mocked_api(tmp_path):
     """End-to-end: all 20 pages generate correctly with mocked API."""
-    with patch("t3_content_library.generator.anthropic") as mock_anthropic:
+    with patch("t3_content_library.cli.anthropic") as mock_cli_anthropic, \
+         patch("t3_content_library.generator.anthropic") as mock_gen_anthropic:
         mock_client = MagicMock()
-        mock_anthropic.Anthropic.return_value = mock_client
+        mock_cli_anthropic.Anthropic.return_value = mock_client
+        mock_gen_anthropic.Anthropic.return_value = mock_client
         mock_client.messages.create.return_value = _make_mock_response(
             "Generierter Beispielinhalt für die Webseite."
         )
@@ -42,9 +45,11 @@ def test_full_generation_with_mocked_api(tmp_path):
 
 def test_output_directory_structure(tmp_path):
     """Output files are in a slugified subdirectory."""
-    with patch("t3_content_library.generator.anthropic") as mock_anthropic:
+    with patch("t3_content_library.cli.anthropic") as mock_cli_anthropic, \
+         patch("t3_content_library.generator.anthropic") as mock_gen_anthropic:
         mock_client = MagicMock()
-        mock_anthropic.Anthropic.return_value = mock_client
+        mock_cli_anthropic.Anthropic.return_value = mock_client
+        mock_gen_anthropic.Anthropic.return_value = mock_client
         mock_client.messages.create.return_value = _make_mock_response("Inhalt.")
 
         runner = CliRunner()
