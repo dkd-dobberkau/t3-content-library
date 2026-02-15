@@ -1,0 +1,28 @@
+small:
+  - 01-homepage
+  - 02-about
+  - 05-leistungen
+  - 06-leistung-detail-1
+  - 15-kontakt
+  - 16-impressum
+  - 17-datenschutz
+  - 18-agb
+
+medium:
+  - 01-homepage
+  - 02-about
+  - 03-team
+  - 05-leistungen
+  - 06-leistung-detail-1
+  - 09-referenzen
+  - 10-referenz-detail
+  - 11-aktuelles
+  - 12-artikel-1
+  - 14-faq
+  - 15-kontakt
+  - 16-impressum
+  - 17-datenschutz
+  - 18-agb
+  - 19-downloads
+
+full: all

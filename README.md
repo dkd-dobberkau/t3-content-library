@@ -1,22 +1,18 @@
 # T3 Content Library
 
-Python CLI + Web UI that generates 20 realistic TYPO3 example pages with AI-generated German content using the Claude API. Each page is output as Markdown with YAML frontmatter and TYPO3 content element annotations.
+Python CLI + Web UI that generates realistic TYPO3 example pages (8/15/20) with AI-generated German content using the Claude API. Each page is output as Markdown with YAML frontmatter and TYPO3 content element annotations.
 
 ![Start](docs/screenshots/01-start.png)
 
 ## What it does
 
-Given a company description (e.g. "Italienisches Restaurant La Bella Vista in München"), the tool generates a complete set of 20 pages typical for a German business website:
+Given a company description (e.g. "Italienisches Restaurant La Bella Vista in München"), the tool generates a set of pages typical for a German business website. Three page sets are available:
 
-| Pages | Description |
-|-------|-------------|
-| Startseite, Über uns, Team, Geschichte | Company presentation |
-| Leistungen + 3 Detail pages | Services / Products |
-| Referenzen + Detail | Portfolio / Case studies |
-| Aktuelles + 2 Articles | News / Blog |
-| FAQ, Kontakt | Support |
-| Impressum, Datenschutz, AGB | Legal (German) |
-| Downloads, Sitemap | Utilities |
+| Set | Pages | Description |
+|-----|-------|-------------|
+| **Small** (8) | Startseite, Über uns, Leistungen, Leistung Detail, Kontakt, Impressum, Datenschutz, AGB | Core pages for simple websites |
+| **Medium** (15) | Small + Team, Referenzen, Referenz-Detail, Aktuelles, Artikel, FAQ, Downloads | Extended set with portfolio and news |
+| **Full** (20) | All pages including Geschichte, 3 Leistung Details, 2 Artikel, Sitemap | Complete set (default) |
 
 Each generated Markdown file contains:
 - YAML frontmatter with title, slug, parent, layout, nav position, SEO fields
@@ -124,6 +120,7 @@ python generate.py --company "Schreinerei Holzmann in Frankfurt" --output-dir ./
 ```
 
 Options:
+- `--set small|medium|full` — Page set to generate (default: full)
 - `--parallel N` — Number of concurrent page generations (default: 5)
 - `--jsonl` — Machine-readable JSONL output (used by backend)
 
@@ -160,7 +157,9 @@ docker compose build --no-cache # Rebuild images from scratch
 
 ```
 t3-content-library/
-├── config/structure/       # 20 YAML page definitions with CE types and prompts
+├── config/
+│   ├── structure/          # 20 YAML page definitions with CE types and prompts
+│   └── page_sets.yaml      # Page set definitions (small/medium/full)
 ├── t3_content_library/
 │   ├── loader.py           # YAML structure loader
 │   ├── generator.py        # Claude API content generator (batched, with token tracking)

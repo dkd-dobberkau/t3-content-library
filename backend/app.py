@@ -34,8 +34,12 @@ T3_LIB_PATH = os.environ.get("T3_LIB_PATH", os.path.join(os.path.dirname(__file_
 OUTPUT_BASE = os.environ.get("OUTPUT_BASE", "/tmp/t3-outputs")
 
 
+PAGE_SET_COUNTS = {"small": 8, "medium": 15, "full": 20}
+
+
 class GenerateRequest(BaseModel):
     company: str
+    page_set: str = "full"
 
 
 class JobStatus(BaseModel):
@@ -44,7 +48,7 @@ class JobStatus(BaseModel):
     progress: int  # 0-100
     current_page: str | None = None
     pages_done: int = 0
-    pages_total: int = 20
+    pages_total: int = 0
     output_dir: str | None = None
     error: str | None = None
     created_at: str | None = None
@@ -61,26 +65,31 @@ async def start_generation(req: GenerateRequest):
     output_dir = os.path.join(OUTPUT_BASE, job_id)
     os.makedirs(output_dir, exist_ok=True)
 
+    page_set = req.page_set if req.page_set in PAGE_SET_COUNTS else "full"
+    pages_total = PAGE_SET_COUNTS[page_set]
+
     job = JobStatus(
         job_id=job_id,
         status="pending",
         progress=0,
+        pages_total=pages_total,
         output_dir=output_dir,
         created_at=datetime.now().isoformat(),
     )
     jobs[job_id] = {
         "status": job,
         "company": req.company,
+        "page_set": page_set,
         "events": [],
     }
 
     # Start background task
-    asyncio.create_task(_run_generation(job_id, req.company, output_dir))
+    asyncio.create_task(_run_generation(job_id, req.company, output_dir, page_set))
 
     return job
 
 
-async def _run_generation(job_id: str, company: str, output_dir: str):
+async def _run_generation(job_id: str, company: str, output_dir: str, page_set: str = "full"):
     """Run the generation process in background."""
     job_data = jobs[job_id]
     job_data["status"].status = "running"
@@ -91,6 +100,7 @@ async def _run_generation(job_id: str, company: str, output_dir: str):
             sys.executable, "generate.py",
             "--company", company,
             "--output-dir", output_dir,
+            "--set", page_set,
             "--jsonl",
             cwd=T3_LIB_PATH,
             stdout=asyncio.subprocess.PIPE,
@@ -131,7 +141,7 @@ async def _run_generation(job_id: str, company: str, output_dir: str):
         if process.returncode == 0:
             job_data["status"].status = "completed"
             job_data["status"].progress = 100
-            job_data["status"].pages_done = 20
+            job_data["status"].pages_done = job_data["status"].pages_total
         else:
             stderr = await process.stderr.read()
             job_data["status"].status = "failed"

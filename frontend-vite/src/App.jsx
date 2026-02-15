@@ -47,8 +47,17 @@ function renderContent(content) {
 }
 
 // ---- Main App ----
+const PAGE_SETS = [
+  { value: 'small', label: 'Klein (8 Seiten)' },
+  { value: 'medium', label: 'Mittel (15 Seiten)' },
+  { value: 'full', label: 'Komplett (20 Seiten)' },
+]
+
+const PAGE_SET_COUNTS = { small: 8, medium: 15, full: 20 }
+
 export default function App() {
   const [company, setCompany] = useState('')
+  const [pageSet, setPageSet] = useState('full')
   const [jobId, setJobId] = useState(null)
   const [status, setStatus] = useState(null)
   const [progress, setProgress] = useState(0)
@@ -111,7 +120,7 @@ export default function App() {
       const res = await fetch(`${API_BASE}/api/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ company: company.trim() }),
+        body: JSON.stringify({ company: company.trim(), page_set: pageSet }),
       })
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -168,7 +177,7 @@ export default function App() {
       setError(`Verbindungsfehler: ${err.message}. Läuft das Backend auf ${API_BASE || 'localhost:8000'}?`)
       setStatus(null)
     }
-  }, [company, loadPages, pollStatus])
+  }, [company, pageSet, loadPages, pollStatus])
 
   useEffect(() => {
     return () => {
@@ -188,7 +197,7 @@ export default function App() {
           TYPO3 Content Generator
         </div>
         <h1>T3 Content <em>Library</em></h1>
-        <p>Generiere 20 realistische TYPO3-Seiten mit KI-generierten Inhalten auf Basis deiner Firmenbeschreibung.</p>
+        <p>Generiere realistische TYPO3-Seiten mit KI-generierten Inhalten auf Basis deiner Firmenbeschreibung.</p>
       </header>
 
       <section className="input-section">
@@ -204,6 +213,16 @@ export default function App() {
             onKeyDown={e => e.key === 'Enter' && !isRunning && handleGenerate()}
             disabled={isRunning}
           />
+          <select
+            className="select-page-set"
+            value={pageSet}
+            onChange={e => setPageSet(e.target.value)}
+            disabled={isRunning}
+          >
+            {PAGE_SETS.map(s => (
+              <option key={s.value} value={s.value}>{s.label}</option>
+            ))}
+          </select>
           <button className="btn-generate" onClick={handleGenerate} disabled={isRunning || !company.trim()}>
             {isRunning
               ? <><span className="spinner" />Generiert...</>
@@ -225,7 +244,7 @@ export default function App() {
             <div className="progress-bar-fill" style={{ width: `${Math.max(progress, 2)}%` }} />
           </div>
           <div className="progress-stats">
-            <span>{pagesDone}/20 Seiten</span>
+            <span>{pagesDone}/{PAGE_SET_COUNTS[pageSet]} Seiten</span>
             <span>{elapsed}s</span>
             {tokens.input > 0 && <span>{formatTokens(tokens.input + tokens.output)} Tokens</span>}
           </div>
@@ -237,7 +256,7 @@ export default function App() {
                   <IconCheck />{title}
                 </span>
               ))}
-              {pagesDone < 20 && currentPage && (
+              {pagesDone < PAGE_SET_COUNTS[pageSet] && currentPage && (
                 <span className="page-chip active">
                   <span className="spinner-sm" />{currentPage}
                 </span>

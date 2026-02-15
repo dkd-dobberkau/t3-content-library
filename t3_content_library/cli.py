@@ -41,17 +41,24 @@ def slugify(text: str) -> str:
     help="Anzahl paralleler Generierungen (Standard: 5)",
 )
 @click.option(
+    "--set",
+    "page_set",
+    type=click.Choice(["small", "medium", "full"], case_sensitive=False),
+    default="full",
+    help="Seitenumfang: small (8), medium (15), full (20, Standard)",
+)
+@click.option(
     "--jsonl",
     is_flag=True,
     default=False,
     help="JSONL output for machine consumption (used by backend)",
 )
-def main(company: str, output_dir: str, parallel: int, jsonl: bool):
+def main(company: str, output_dir: str, parallel: int, page_set: str, jsonl: bool):
     """Generiert TYPO3-Beispielseiten mit Content von Claude."""
     load_dotenv()
 
     structure_dir = os.path.join(os.path.dirname(__file__), "..", "config", "structure")
-    structures = load_all_structures(structure_dir)
+    structures = load_all_structures(structure_dir, page_set=page_set)
 
     if not structures:
         click.echo("Keine Seitenstrukturen gefunden in config/structure/")
