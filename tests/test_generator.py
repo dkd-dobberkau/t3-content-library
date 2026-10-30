@@ -1,3 +1,4 @@
+import pytest
 from unittest.mock import patch, MagicMock
 from t3_content_library.generator import generate_content_for_page
 
@@ -5,6 +6,7 @@ from t3_content_library.generator import generate_content_for_page
 def _make_mock_response(text: str, input_tokens: int = 100, output_tokens: int = 200):
     mock_response = MagicMock()
     mock_block = MagicMock()
+    mock_block.type = "text"
     mock_block.text = text
     mock_response.content = [mock_block]
     mock_response.usage = MagicMock(input_tokens=input_tokens, output_tokens=output_tokens)
@@ -34,7 +36,7 @@ def test_generate_content_for_page():
     with patch("t3_content_library.generator.anthropic") as mock_anthropic:
         mock_client = MagicMock()
         mock_anthropic.Anthropic.return_value = mock_client
-        mock_client.messages.create.return_value = _make_mock_response(batched_response, 150, 320)
+        mock_client.beta.messages.create.return_value = _make_mock_response(batched_response, 150, 320)
 
         result, usage, image_keywords = generate_content_for_page(structure, "La Bella Vista, München")
 
@@ -43,7 +45,7 @@ def test_generate_content_for_page():
         assert "Willkommen" in result[0]["content"]
         assert result[1]["type"] == "text"
         assert "2005" in result[1]["content"]
-        assert mock_client.messages.create.call_count == 1
+        assert mock_client.beta.messages.create.call_count == 1
         assert usage["input_tokens"] == 150
         assert usage["output_tokens"] == 320
         assert len(image_keywords) == 3
@@ -69,7 +71,7 @@ def test_content_element_preserves_metadata():
     with patch("t3_content_library.generator.anthropic") as mock_anthropic:
         mock_client = MagicMock()
         mock_anthropic.Anthropic.return_value = mock_client
-        mock_client.messages.create.return_value = _make_mock_response(batched_response)
+        mock_client.beta.messages.create.return_value = _make_mock_response(batched_response)
 
         result, usage, image_keywords = generate_content_for_page(structure, "TestFirma")
 
@@ -77,3 +79,24 @@ def test_content_element_preserves_metadata():
         assert result[0]["image_position"] == "right"
         assert usage["input_tokens"] == 100
         assert usage["output_tokens"] == 200
+
+
+def test_response_text_skips_leading_thinking_block():
+    from t3_content_library.generator import _response_text
+
+    thinking = MagicMock(spec=["type"])
+    thinking.type = "thinking"
+    response = _make_mock_response("Inhalt")
+    response.content.insert(0, thinking)
+
+    assert _response_text(response) == "Inhalt"
+
+
+def test_response_text_raises_on_refusal():
+    from t3_content_library.generator import GenerationError, _response_text
+
+    response = _make_mock_response("")
+    response.stop_reason = "refusal"
+
+    with pytest.raises(GenerationError):
+        _response_text(response)
