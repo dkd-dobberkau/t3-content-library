@@ -7,6 +7,7 @@ from t3_content_library.cli import main
 def _make_mock_response(text: str):
     mock_response = MagicMock()
     mock_block = MagicMock()
+    mock_block.type = "text"
     mock_block.text = text
     mock_response.content = [mock_block]
     mock_response.usage = MagicMock(input_tokens=100, output_tokens=200)
@@ -20,7 +21,7 @@ def test_full_generation_with_mocked_api(tmp_path):
         mock_client = MagicMock()
         mock_cli_anthropic.Anthropic.return_value = mock_client
         mock_gen_anthropic.Anthropic.return_value = mock_client
-        mock_client.messages.create.return_value = _make_mock_response(
+        mock_client.beta.messages.create.return_value = _make_mock_response(
             "Generierter Beispielinhalt für die Webseite."
         )
 
@@ -50,7 +51,7 @@ def test_output_directory_structure(tmp_path):
         mock_client = MagicMock()
         mock_cli_anthropic.Anthropic.return_value = mock_client
         mock_gen_anthropic.Anthropic.return_value = mock_client
-        mock_client.messages.create.return_value = _make_mock_response("Inhalt.")
+        mock_client.beta.messages.create.return_value = _make_mock_response("Inhalt.")
 
         runner = CliRunner()
         result = runner.invoke(

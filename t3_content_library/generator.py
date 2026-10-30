@@ -4,7 +4,32 @@ import re
 import anthropic
 
 
-DEFAULT_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-4-5-20250929")
+DEFAULT_MODEL = os.environ.get("ANTHROPIC_MODEL", "claude-sonnet-5-5")
+# Thinking counts toward max_tokens, so the limit must cover more than the content.
+MAX_TOKENS = 16000
+# ANTHROPIC_MODEL can select older models, which reject these options.
+SONNET_5_5_OPTIONS = {
+    "output_config": {"effort": "low"},
+    "betas": ["server-side-fallback-2026-07-01"],
+    "fallbacks": "default",
+}
+
+
+
+class GenerationError(RuntimeError):
+    """Claude returned no usable text."""
+
+
+def _response_text(response) -> str:
+    """Read text by block type, responses can start with a thinking block."""
+    if response.stop_reason == "refusal":
+        raise GenerationError("Claude declined the request")
+
+    text = "".join(block.text for block in response.content if block.type == "text")
+    if not text.strip():
+        raise GenerationError(f"No text in response (stop_reason: {response.stop_reason})")
+    return text
+
 
 SYSTEM_PROMPT = """Du bist ein Content-Autor für eine Unternehmenswebsite.
 Schreibe natürlichen, professionellen deutschen Content.
@@ -57,14 +82,15 @@ def generate_content_for_page(
         "statt nur 'restaurant')."
     )
 
-    response = client.messages.create(
+    response = client.beta.messages.create(
         model=model,
-        max_tokens=4096,
+        max_tokens=MAX_TOKENS,
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": batched_prompt}],
+        **(SONNET_5_5_OPTIONS if model == "claude-sonnet-5-5" else {}),
     )
 
-    raw = response.content[0].text
+    raw = _response_text(response)
 
     usage = {
         "input_tokens": response.usage.input_tokens,

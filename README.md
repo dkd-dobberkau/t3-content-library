@@ -90,7 +90,7 @@ cp .env.example .env
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `ANTHROPIC_API_KEY` | — (required) | Your Anthropic API key |
-| `ANTHROPIC_MODEL` | `claude-sonnet-4-5-20250929` | Claude model to use |
+| `ANTHROPIC_MODEL` | `claude-sonnet-5-5` | Claude model to use |
 | `NGINX_PORT` | `80` | Host port for Nginx (Docker only) |
 
 Available models:
@@ -98,7 +98,7 @@ Available models:
 | Model | ID | Input / Output per 1M tokens |
 |-------|----|------------------------------|
 | Opus 4.6 | `claude-opus-4-6` | $15.00 / $75.00 |
-| Sonnet 4.5 (default) | `claude-sonnet-4-5-20250929` | $3.00 / $15.00 |
+| Sonnet 5.5 (default) | `claude-sonnet-5-5` | $2.00 / $10.00 |
 | Haiku 4.5 | `claude-haiku-4-5-20251001` | $0.80 / $4.00 |
 
 ## Usage
